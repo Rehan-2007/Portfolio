@@ -1,0 +1,160 @@
+/* Scoped overrides for the legacy touch rules; mounting is controlled by useIsTouch. */
+.flight-ui .touch-controls {
+  --touch-size: 132px;
+  position: fixed;
+  inset: auto max(12px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0;
+  pointer-events: none;
+  touch-action: auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.touch-controls .touch-steering,
+.touch-controls .touch-flight {
+  display: grid;
+  gap: 8px;
+  width: var(--touch-size);
+}
+
+.touch-controls .touch-cluster {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.touch-controls .touch-key,
+.touch-controls .touch-camera-pad,
+.touch-controls .touch-joystick {
+  box-sizing: border-box;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.touch-controls .touch-key {
+  min-width: 46px;
+  min-height: 46px;
+  padding: 5px 3px;
+  border: 1px solid rgba(190, 194, 202, .52);
+  border-radius: 5px;
+  background: rgba(8, 8, 12, .86);
+  color: #f2f0e9;
+  font: 9px var(--font-mono, monospace);
+  line-height: 1.3;
+  letter-spacing: .025em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.touch-controls .touch-key[data-held="true"],
+.touch-controls .touch-key:active {
+  border-color: #ff7580;
+  background: #8f1925;
+}
+
+.touch-controls .touch-key:focus-visible,
+.touch-controls .touch-camera-pad:focus-visible {
+  outline: 3px solid #fff1a8;
+  outline-offset: 3px;
+}
+
+.touch-controls .touch-joystick {
+  position: relative;
+  width: var(--touch-size);
+  height: var(--touch-size);
+  border: 1px solid rgba(190, 194, 202, .55);
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 22%, rgba(158, 168, 186, .12) 23%, transparent 24%), rgba(8, 8, 12, .73);
+  overflow: hidden;
+}
+
+.touch-joystick::before,
+.touch-joystick::after {
+  content: '';
+  position: absolute;
+  background: rgba(190, 194, 202, .2);
+  pointer-events: none;
+}
+.touch-joystick::before { inset: 50% 10px auto; height: 1px; }
+.touch-joystick::after { inset: 10px auto 10px 50%; width: 1px; }
+.touch-joystick-label {
+  position: absolute;
+  top: 12px;
+  width: 100%;
+  color: #d4d7de;
+  font: 8px var(--font-mono, monospace);
+  letter-spacing: .08em;
+  text-align: center;
+  pointer-events: none;
+}
+.touch-joystick-knob {
+  position: absolute;
+  top: calc(50% - 23px);
+  left: calc(50% - 23px);
+  width: 46px;
+  height: 46px;
+  border: 1px solid #ff8d97;
+  border-radius: 50%;
+  background: rgba(143, 25, 37, .94);
+  box-shadow: 0 2px 8px #0008;
+  pointer-events: none;
+}
+
+.touch-camera-tools { display: grid; gap: 6px; }
+.touch-controls .touch-camera-pad {
+  display: grid;
+  place-content: center;
+  gap: 7px;
+  min-height: 78px;
+  padding: 8px;
+  border: 1px dashed rgba(190, 194, 202, .6);
+  border-radius: 7px;
+  background: rgba(8, 8, 12, .7);
+  color: #f2f0e9;
+  text-align: center;
+  cursor: grab;
+}
+.touch-camera-pad:active { cursor: grabbing; }
+.touch-camera-pad span { font: 10px var(--font-mono, monospace); letter-spacing: .12em; }
+.touch-camera-pad small { font: 8px/1.5 var(--font-mono, monospace); color: #d0d4db; }
+.touch-camera-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.touch-camera-buttons .touch-key:last-child { grid-column: 1 / -1; }
+
+@media (min-width: 761px) and (max-width: 1279px) {
+  .flight-ui:has(.touch-controls) .telemetry-panel {
+    top: max(82px, calc(env(safe-area-inset-top) + 64px));
+    bottom: auto;
+  }
+  .flight-ui:has(.touch-controls) .control-deck,
+  .flight-ui:has(.touch-controls) .quick-actions { display: none; }
+}
+
+@media (min-width: 1280px) and (pointer: fine) {
+  .flight-ui .touch-controls { display: none; }
+}
+
+@media (max-width: 360px), (max-height: 540px) {
+  .flight-ui .touch-controls { --touch-size: 112px; gap: 8px; }
+  .touch-controls .touch-camera-pad { min-height: 58px; gap: 2px; padding: 4px; }
+  .touch-controls .touch-steering,
+  .touch-controls .touch-flight { gap: 6px; }
+}
+
+@media (max-height: 420px) and (orientation: landscape) {
+  .flight-ui .touch-controls { --touch-size: 108px; bottom: max(8px, env(safe-area-inset-bottom)); }
+  .touch-controls .touch-camera-pad { min-height: 48px; }
+  .touch-camera-pad small { display: none; }
+}
+
+/* Gestures are direct manipulation; no inertia or animated recentering, including reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .touch-controls *, .touch-controls *::before, .touch-controls *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

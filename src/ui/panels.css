@@ -1,0 +1,87 @@
+/* DOM dialogs remain readable and operable independently of WebGL/model loading. */
+.world-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(880px, calc(100vw - 28px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 1px solid #515965;
+  color: #f2f0e9;
+  background: #12151a;
+  overflow: auto;
+  scrollbar-width: thin;
+  pointer-events: auto;
+  font-family: var(--font-mono);
+}
+.world-dialog::backdrop { background: rgba(5, 9, 17, .45); backdrop-filter: blur(4px); }
+.dialog-content { padding: clamp(18px, 3vw, 30px); }
+.dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid #363d47; }
+.dialog-header h2 { margin: 6px 0 0; font: 700 clamp(26px, 4vw, 36px)/1.05 var(--font-display); letter-spacing: .06em; }
+.dialog-header .eyebrow { font-size: 9px; color: #d79a9f; }
+.dialog-header .close-button { flex: 0 0 44px; font-size: 28px; }
+.dialog-footer { margin-top: 20px; padding-top: 16px; border-top: 1px solid #363d47; }
+.asset-status { margin: 18px 0; padding: 12px 16px; border-left: 3px solid #689aab; background: #1b232d; font-size: 12px; line-height: 1.6; color: #d4dfe5; }
+.asset-status p { margin: 0 0 6px; }
+.info-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0; }
+.info-tabs button, .destination-row button, .quality-control button { min-height: 40px; padding: 8px 12px; border: 1px solid #44505c; background: #202731; color: #dce2e8; font: 11px var(--font-mono); cursor: pointer; }
+.info-tabs button[aria-pressed="true"], .quality-control button[aria-pressed="true"] { background: #842331; color: #fff; border-color: #ca6370; }
+.info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+.info-card { min-width: 0; margin-bottom: 14px; padding: 20px; background: #1b2027; border: 1px solid #343d48; line-height: 1.65; }
+.info-card h3 { font: 600 24px/1.15 var(--font-display); margin: 12px 0; letter-spacing: .04em; }
+.info-card p { color: #c5ccd4; font: 14px/1.75 system-ui, sans-serif; margin: 10px 0; }
+.info-card > svg { color: #9ecbd8; }
+.info-card .eyebrow { font-size: 10px; color: #dba5ab; }
+.info-card summary, .asset-status summary { cursor: pointer; padding: 8px 0; color: #e2e9ed; }
+.tech-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
+.tech-tags span { background: #28333e; border: 1px solid #3b4854; padding: 5px 8px; font-size: 11px; line-height: 1.3; }
+.info-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; font-size: 12px; }
+.info-links a { color: #b0dce8; text-underline-offset: 4px; }
+.info-links small, .small-note { color: #a6b3c1; font: 12px/1.7 var(--font-mono); }
+.profile-role { color: #cddfe5 !important; }
+.spec-list { margin: 18px 0 0; }
+.spec-list > div { display: grid; grid-template-columns: 100px 1fr; padding: 12px 0; border-bottom: 1px solid #343d48; gap: 10px; }
+.spec-list dt { color: #b0c4cf; font-size: 12px; }
+.spec-list dd { margin: 0; font: 14px system-ui, sans-serif; }
+.face-card { position: relative; text-align: left; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; background: #202731; padding: 22px; border: 1px solid #44505c; color: #e9eff3; cursor: pointer; }
+.face-card strong { font: 600 23px/1.1 var(--font-display); }
+.face-card > span:last-child { color: #bbc9d1; font-size: 12px; }
+.face-card:hover { border-color: #b6c8d3; background: #2c3440; }
+.face-chip { width: 25px; height: 5px; background: #e5d17a; }
+.face-chip-1 { background: #6ea5d7; }.face-chip-2 { background: #dd797c; }.face-chip-3 { background: #76b390; }.face-chip-4 { background: #e8a26f; }.face-chip-5 { background: #e2e6e9; }
+.world-map { position: relative; height: 190px; margin: 8px 0 20px; background-color: #17232a; background-image: linear-gradient(#49606b28 1px, transparent 1px), linear-gradient(90deg, #49606b28 1px, transparent 1px); background-size: 28px 28px; border: 1px solid #42545f; }
+.map-north { position: absolute; top: 12px; right: 14px; font-size: 11px; color: #b6cbd5; }
+.map-site { position: absolute; width: 28px; height: 28px; transform: translate(-50%, -50%); border: 1px solid #81a4b2; background: #305163; color: white; cursor: pointer; font: 10px var(--font-mono); }
+.map-aircraft { position: absolute; color: #e4a3a7; z-index: 1; transform: translate(-50%, -50%); font-size: 18px; pointer-events: none; }
+.destination-rows { display: grid; gap: 8px; margin-bottom: 20px; }
+.destination-row { display: grid; grid-template-columns: 25px 1fr auto auto; gap: 12px; align-items: center; border-bottom: 1px solid #36414c; padding: 10px 0; }
+.destination-row strong { font: 600 18px var(--font-display); }
+.destination-row small { display: block; color: #a6b7c5; font-size: 10px; margin-top: 4px; }
+.motion-setting { display: flex; gap: 10px; align-items: center; margin-top: 16px; font-size: 12px; }
+.proximity-card { pointer-events: auto; }
+.mobile-help { display: none; }
+.world-dialog :focus-visible { outline: 2px solid #c3e4f4; outline-offset: 3px; }
+@media (max-width: 760px) {
+  .mobile-help { display: inline-flex; }
+  .info-grid { grid-template-columns: 1fr; }
+  .world-dialog { max-height: calc(100dvh - 20px); }
+  .destination-row { grid-template-columns: 20px 1fr auto; gap: 8px; }
+  .destination-row button:last-child { grid-column: 3; }
+  .world-map { height: 160px; }
+  .spec-list > div { grid-template-columns: 72px 1fr; }
+}
+.aircraft-load-notice { position: absolute; top: 20%; left: 50%; transform: translateX(-50%); width: min(380px, calc(100vw - 40px)); padding: 18px; border: 1px solid #698393; background: #14202cea; color: #eaf1f5; pointer-events: auto; font-size: 12px; }
+.aircraft-load-notice p { color: #bbcdd7; line-height: 1.6; }
+/* Contact drafts are never reported sent without a real service acknowledgement. */
+.contact-form { display: grid; gap: 14px; margin-top: 22px; }
+.contact-field { display: grid; gap: 7px; }
+.contact-field label { color: #dce5ec; font-size: 12px; }
+.contact-field input, .contact-field textarea { width: 100%; box-sizing: border-box; padding: 12px; background: #111920; border: 1px solid #506170; color: #eef4f7; font: 15px/1.5 system-ui, sans-serif; border-radius: 0; }
+.contact-field [aria-invalid="true"] { border-color: #e88791; }
+.contact-field .contact-error { color: #efadb5; margin: 0; font-size: 12px; }
+.contact-form .contact-status { margin: 0; color: #c8dce5; }
+.cube-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+.cube-actions span { color: #b9cbd4; font-size: 11px; }
+.destination-dialog:has(.cube-actions) { margin-right: 18px; width: min(510px, calc(100vw - 28px)); }
+@media (max-width: 760px) { .destination-dialog:has(.cube-actions) { margin: auto; } }
+@media (prefers-reduced-motion: reduce) { .world-dialog::backdrop { backdrop-filter: none; } }
