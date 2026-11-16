@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ANTI-AI — Human Intelligence
 
 Existing React/TypeScript/Vite portfolio, extended with source-derived 3D assets and a streamed voxel landscape. This is a **local preview**, not a verified public release or a claim of third-party asset redistribution rights.
@@ -71,3 +72,7 @@ Mouse: left-drag camera in exploration, right-drag camera with FX ON, wheel zoom
 - [Verification notes](docs/verification.md)
 
 GLB/image byte sizes and renderer counts are measured locally; they are not a promise of AAA rendering, universal mobile frame rates, or complete vanilla Minecraft fidelity.
+=======
+# Portfolio
+Best site till date
+>>>>>>> 303537eb74346956571eb9bfda1bce3f396c82eb
