@@ -14,7 +14,7 @@ export function WorldEnvironment({ quality }: WorldEnvironmentProps) {
     <group name="ANTI-AI voxel adventure world">
       <VoxelAtmosphere quality={quality} />
       <WorldLighting quality={quality} />
-      <VoxelTerrain key={quality} quality={quality} />
+      <VoxelTerrain quality={quality} />
       <StationBeacons />
       <LandmarkModels />
     </group>

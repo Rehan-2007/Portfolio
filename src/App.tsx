@@ -7,6 +7,7 @@ import { useModelAssets } from './stores/useModelAssets'
 import { useScenePreparation } from './stores/useScenePreparation'
 import { FlightInterface } from './ui/FlightInterface'
 import './App.css'
+import './ui/world-loading.css'
 
 const PhaseOneExperience = lazy(() => import('./experience/PhaseOneExperience'))
 
@@ -42,7 +43,7 @@ function App() {
   return (
     <main className={`experience-shell ${ready ? 'world-ready' : 'world-preparing'}`}>
       <SceneErrorBoundary fallback={(error, retry) => <ExperienceFallback title="3D WORLD INTERRUPTED" message="World preparation failed safely. Retry the renderer or use the accessible controls guide." error={error} onRetry={retry} />}>
-        <Suspense fallback={<LoadingScreen />}><PhaseOneExperience onReady={onReady} onContextLost={onContextLost} onContextRestored={onContextRestored} /></Suspense>
+        <Suspense fallback={null}><PhaseOneExperience onReady={onReady} onContextLost={onContextLost} onContextRestored={onContextRestored} /></Suspense>
       </SceneErrorBoundary>
       {!ready && !contextLost && <LoadingScreen />}
       {contextLost && <ExperienceFallback title="GRAPHICS CONTEXT LOST" message="The graphics device paused. Restore the page to prepare its resources again." onRetry={() => location.reload()} />}

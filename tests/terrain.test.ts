@@ -3,6 +3,9 @@ import test from 'node:test'
 import { VOXEL_WORLD, VOXEL_QUALITY } from '../src/config/voxelWorld'
 import { STATIONS, SPAWN, WORLD_BOUND } from '../src/config/stations'
 import { sampleTerrain, sampleTerrainHeight, sampleTreeSite, sampleFlightFloor } from '../src/lib/voxelTerrain'
+import { stationProximity, teleportAircraft } from '../src/lib/flightNavigation'
+import { aircraftFloor } from '../src/lib/aircraftClearance'
+import { flight } from '../src/lib/flight'
 import { baseChunkCoordinates, desiredChunks, generateVoxelChunk, generateVoxelClouds } from '../src/experience/world/generateVoxelWorld'
 
 test('expanded world exceeds 11k units with flight area inside terrain extent', () => {
@@ -16,10 +19,9 @@ test('spawn, station centers and inward approach paths remain safe', () => {
   assert.ok(sampleFlightFloor(SPAWN.x, SPAWN.z, 0, SPAWN.y) < SPAWN.y)
   for (const site of STATIONS) {
     assert.equal(sampleTerrainHeight(site.pos[0], site.pos[2]), site.pos[1])
-    const distance = Math.hypot(site.pos[0], site.pos[2]) || 1
-    const x = site.pos[0] - site.pos[0] / distance * 190
-    const z = site.pos[2] - site.pos[2] / distance * 190
-    assert.ok(sampleFlightFloor(x, z, Math.atan2(site.pos[0] - x, -(site.pos[2] - z)), 72) <= 72, site.id)
+    teleportAircraft(site.id)
+    assert.ok(flight.y >= aircraftFloor(flight.x, flight.z, flight.heading, flight.y), site.id)
+    assert.ok(stationProximity(site.id, flight.x, flight.y, flight.z), `${site.id}: reachable arrival`)
   }
 })
 

@@ -1,14 +1,20 @@
 import { useEffect, useRef } from 'react'
 import type { ReactNode } from 'react'
+import { useScenePreparation } from '../stores/useScenePreparation'
 
 interface ModalProps { title: string; children: ReactNode; onClose: () => void; className?: string }
 
 export function Modal({ title, children, onClose, className = '' }: ModalProps) {
   const dialog = useRef<HTMLDialogElement>(null)
+  const ready = useScenePreparation((state) => state.ready)
+  useEffect(() => {
+    const element = dialog.current!
+    if (ready && !element.open) element.showModal()
+    else if (!ready && element.open) element.close()
+  }, [ready])
   useEffect(() => {
     const element = dialog.current!
     const previous = document.activeElement as HTMLElement | null
-    if (!element.open) element.showModal()
     return () => { element.close(); previous?.focus() }
   }, [])
   return (

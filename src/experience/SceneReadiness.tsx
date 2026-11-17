@@ -1,12 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { useThree } from '@react-three/fiber'
 import * as THREE from 'three'
-import { MODEL_CONFIG } from '../config/models'
+import { ESSENTIAL_MODELS, readinessPrerequisites } from '../lib/sceneReadiness'
 import { useModelAssets } from '../stores/useModelAssets'
 import { useScenePreparation } from '../stores/useScenePreparation'
 import { useExperienceStore } from '../stores/useExperienceStore'
-
-export const ESSENTIAL_MODELS = Object.values(MODEL_CONFIG).filter((model) => model.visible && model.assetPath !== null).map((model) => model.id)
 
 /** GPU work happens under the opaque DOM loader; no additional RAF/controller. */
 export function SceneReadiness({ onReady }: { onReady: () => void }) {
@@ -29,10 +27,9 @@ export function SceneReadiness({ onReady }: { onReady: () => void }) {
 
   useEffect(() => {
     if (preparation.error) return
-    const failed = ESSENTIAL_MODELS.find((id) => assets[id]?.phase === 'error')
-    if (failed) { useScenePreparation.getState().fail(`${MODEL_CONFIG[failed].label}: ${assets[failed]?.message ?? 'Asset loading failed'}`); return }
-    if (!preparation.rendererReady || preparation.terrainQuality !== quality || preparation.terrainCompleted !== preparation.terrainTotal) return
-    if (ESSENTIAL_MODELS.some((id) => assets[id]?.phase !== 'ready' || assets[id]?.revision !== (revisions[id] ?? 0))) return
+    const gate = readinessPrerequisites({ rendererReady: preparation.rendererReady, terrainComplete: preparation.terrainQuality === quality && preparation.terrainCompleted === preparation.terrainTotal, statuses: assets, revisions })
+    if (gate.error) { useScenePreparation.getState().fail(gate.error); return }
+    if (!gate.ready) return
     const signature = `${quality}:${preparation.epoch}:${revisionKey}`
     if (lastSignature.current === signature || warming.current) return
     let cancelled = false

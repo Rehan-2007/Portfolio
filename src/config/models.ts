@@ -1,5 +1,7 @@
 import { STATIONS } from './stations'
 import { ACTIVE_AIRCRAFT, AIRCRAFT_SCALE } from './aircraft'
+import { LANDMARK_GEOMETRY } from './landmarkGeometry'
+import { getStation } from './stations'
 import type { StationId } from './stations'
 
 export type ModelId = StationId | 'aircraft' | 'environment'
@@ -39,10 +41,10 @@ function entry(id: ModelId, label: string, station: StationId | null): ModelConf
 export const MODEL_CONFIG: Record<ModelId, ModelConfig> = {
   aircraft: { ...entry('aircraft', 'Supplied B-2 Spirit', null), assetPath: ACTIVE_AIRCRAFT.assetPath, rotation: [0, ACTIVE_AIRCRAFT.correctiveYaw, 0], scale: AIRCRAFT_SCALE },
   about: { ...entry('about', 'Predator laptop asset', 'about'), assetPath: '/models/laptop/predator-laptop.glb', scale: 20, rotation: [0, Math.PI, 0], targetDimensions: [320, 231, 209], interaction: { enabled: true, station: 'about', radius: 260, point: [0, 6, 0] } },
-  cube: { ...entry('cube', "Supplied Rubik's Cube", 'cube'), assetPath: '/models/rubiks-cube/rubiks-cube.glb', position: [560, 157, -340], scale: 50, targetDimensions: [300, 300, 300], interaction: { enabled: true, station: 'cube', radius: 280, point: [0, 0, 0] } },
+  cube: { ...entry('cube', "Supplied Rubik's Cube", 'cube'), assetPath: '/models/rubiks-cube/rubiks-cube.glb', position: [getStation('cube').pos[0], 157, getStation('cube').pos[2]], scale: 50, targetDimensions: [300, 300, 300], interaction: { enabled: true, station: 'cube', radius: 360, point: [0, 0, 0] } },
   lab: entry('lab', 'Engineering laboratory', 'lab'),
-  archive: { ...entry('archive', 'Converted Minecraft winemaker structure', 'archive'), assetPath: '/models/projects/minecraft-archive.glb', scale: 1.75 },
-  shawarma: { ...entry('shawarma', 'Supplied Frankie wrap', 'shawarma'), assetPath: '/models/shawarma/frankie-wrap.glb', scale: 2.5 },
+  archive: { ...entry('archive', 'Converted Minecraft winemaker structure', 'archive'), assetPath: '/models/projects/minecraft-archive.glb', scale: LANDMARK_GEOMETRY.archive.intendedScale, targetDimensions: [329, 238, 332.5], interaction: { enabled: true, station: 'archive', radius: 440, point: [0, 34, 1] } },
+  shawarma: { ...entry('shawarma', 'Supplied Frankie wrap', 'shawarma'), assetPath: '/models/shawarma/frankie-wrap.glb', scale: LANDMARK_GEOMETRY.shawarma.intendedScale, targetDimensions: [18.69672, 60, 19.055745], interaction: { enabled: true, station: 'shawarma', radius: 190, point: [0, 4, 0] } },
   contact: entry('contact', 'Communication terminal', 'contact'),
   environment: entry('environment', 'Additional environment model', null),
 }

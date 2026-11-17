@@ -75,7 +75,7 @@ export default function PhaseOneExperience({
       dpr={dpr as [number, number]}
       camera={{ position: [0, 82, 350], fov: 55, near: 0.5, far: 19000 }}
       gl={{
-        antialias: quality !== 'low',
+        antialias: true,
         alpha: false,
         powerPreference: quality === 'low' ? 'low-power' : 'high-performance',
         stencil: false,
@@ -86,8 +86,8 @@ export default function PhaseOneExperience({
         gl.shadowMap.enabled = false
         gl.outputColorSpace = THREE.SRGBColorSpace
         gl.toneMapping = THREE.ACESFilmicToneMapping
-        gl.toneMappingExposure = 1.05
-        gl.setClearColor('#d88c75')
+        gl.toneMappingExposure = 0.98
+        gl.setClearColor('#c7a3a2')
       }}
     >
       <ReflectionEnvironment />

@@ -1,6 +1,7 @@
 import { STATIONS } from '../config/stations'
 import { FLOATING_ISLANDS, LAKES, MOUNTAIN_RANGES, RIVER_PATH, VOXEL_WORLD } from '../config/voxelWorld'
 import { clamp } from './math'
+import { getLandmarkPadRadius } from '../config/landmarkGeometry'
 
 export type VoxelBiome = 'ocean' | 'shore' | 'meadow' | 'forest' | 'highland' | 'amber' | 'alpine' | 'road' | 'water' | 'station'
 export interface TerrainSample {
@@ -72,14 +73,15 @@ export function sampleTerrain(worldX: number, worldZ: number): TerrainSample {
   let siteDistance = Infinity
   let siteHeight = 0
   let roadDistance = Infinity
+  let station = false
   for (const site of STATIONS) {
     const distance = Math.hypot(x - site.pos[0], z - site.pos[2])
+    if (distance < getLandmarkPadRadius(site.id)) station = true
     if (distance < siteDistance) { siteDistance = distance; siteHeight = site.pos[1] }
     roadDistance = Math.min(roadDistance, segmentDistance(x, z, 0, 100, site.pos[0], site.pos[2]))
   }
-  const station = siteDistance < 230
   const road = roadDistance < 24 && !station && !hub
-  const corridor = roadDistance < 90 && radius < 1250
+  const corridor = roadDistance < 90
   let riverDistance = Infinity
   for (let i = 1; i < RIVER_PATH.length; i++) {
     riverDistance = Math.min(riverDistance, segmentDistance(x, z, ...RIVER_PATH[i - 1], ...RIVER_PATH[i]))

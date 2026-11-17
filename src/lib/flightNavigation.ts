@@ -13,8 +13,11 @@ export function stationProximity(id: StationId, x: number, y: number, z: number)
   const model = MODEL_CONFIG[id]
   if (!model.interaction.enabled) return false
   const point = model.assetPath ? new Vector3(...model.interaction.point).applyMatrix4(landmarkWrapperTransform(id)) : new Vector3(...site.pos)
-  const verticalReach = Math.max(210, getLandmarkBounds(id).max.y - point.y + AIRCRAFT_SIZE.height / 2 + 44)
-  return Math.hypot(x - point.x, z - point.z) <= model.interaction.radius && Math.abs(y - point.y) < verticalReach
+  const bounds = getLandmarkBounds(id)
+  const size = bounds.getSize(new Vector3())
+  const verticalReach = Math.max(210, bounds.max.y - point.y + AIRCRAFT_SIZE.height / 2 + 44)
+  const horizontalReach = Math.max(model.interaction.radius, Math.hypot(size.x, size.z) / 2 + AIRCRAFT_SIZE.span / 2 + 90)
+  return Math.hypot(x - point.x, z - point.z) <= horizontalReach && Math.abs(y - point.y) < verticalReach
 }
 
 export function teleportAircraft(id: StationId): void {

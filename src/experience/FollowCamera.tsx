@@ -2,12 +2,12 @@ import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { flight, flightEvents } from '../lib/flight'
-import { getStation } from '../config/stations'
 import { sampleCameraFloor } from '../lib/voxelTerrain'
 import { landmarkFloor } from '../lib/landmarkBounds'
 import { experienceSnapshot, useExperienceStore } from '../stores/useExperienceStore'
 import { cameraInput, resetCameraInput, useCameraInput } from '../hooks/useCameraInput'
 import { AIRCRAFT_CAMERAS, framingDistance } from '../lib/aircraftCamera'
+import { landmarkCameraPose } from '../lib/landmarkCamera'
 
 export function FollowCamera() {
   const activeStation = useExperienceStore((state) => state.activeStation)
@@ -32,10 +32,9 @@ export function FollowCamera() {
     desired.set(flight.x - Math.sin(heading) * distance + Math.cos(heading) * cinematicSide, flight.y + height, flight.z + Math.cos(heading) * distance + Math.sin(heading) * cinematicSide)
     target.set(flight.x, flight.y + 3, flight.z)
     if (store.activeStation) {
-      const station = getStation(store.activeStation)
-      if (station.id === 'about') { desired.set(station.pos[0] + 310, station.pos[1] + 170, station.pos[2] + 410); target.set(station.pos[0], station.pos[1] + 115, station.pos[2]) }
-      else if (station.id === 'cube') { desired.set(station.pos[0] + 360, station.pos[1] + 240, station.pos[2] + 490); target.set(station.pos[0], station.pos[1] + 157, station.pos[2]) }
-      else { desired.set(station.pos[0] + 120, station.pos[1] + 150, station.pos[2] + 230); target.set(station.pos[0], station.pos[1] + 35, station.pos[2]) }
+      const pose = landmarkCameraPose(store.activeStation, preset.fov, camera instanceof THREE.PerspectiveCamera ? camera.aspect : 1.6)
+      desired.copy(pose.position)
+      target.copy(pose.target)
     }
     desired.setY(Math.max(desired.y, sampleCameraFloor(desired.x, desired.z, desired.y), landmarkFloor(desired.x, desired.z) + 14))
     if (reset) { resetVersion.current = flightEvents.resetVersion; camera.position.copy(desired); look.copy(target) }

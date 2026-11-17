@@ -35,15 +35,21 @@ export function prepareModel(gltf: GLTF, anisotropy = 4, pixelTextures = false) 
       if (existing) return existing
       const copy = source.clone()
       const maps = copy as THREE.MeshStandardMaterial
-      if (maps.aoMap) {
+      if ('aoMap' in copy && maps.aoMap) {
         maps.aoMap = null
         if (!warnings.includes('Imported AO maps disabled.')) warnings.push('Imported AO maps disabled.')
       }
       for (const key of ['map', 'emissiveMap', 'normalMap', 'roughnessMap', 'metalnessMap', 'bumpMap', 'alphaMap'] as const) {
         const texture = maps[key]
-        if (texture) maps[key] = prepareTexture(texture, key === 'map' || key === 'emissiveMap')
+        if (key in copy && texture) maps[key] = prepareTexture(texture, key === 'map' || key === 'emissiveMap')
       }
-      maps.envMapIntensity = 0.8
+      if (copy instanceof THREE.MeshPhysicalMaterial) {
+        for (const key of ['clearcoatMap', 'clearcoatNormalMap', 'clearcoatRoughnessMap', 'transmissionMap', 'thicknessMap', 'specularIntensityMap', 'specularColorMap', 'sheenColorMap', 'sheenRoughnessMap'] as const) {
+          const texture = copy[key]
+          if (texture) copy[key] = prepareTexture(texture, key === 'specularColorMap' || key === 'sheenColorMap')
+        }
+      }
+      if (copy instanceof THREE.MeshStandardMaterial) copy.envMapIntensity = 0.8
       materials.set(source, copy)
       return copy
     }

@@ -20,6 +20,7 @@ import { useEffects, resetEffects } from '../stores/useEffects'
 import { clearSimulatorActions } from '../hooks/useSimulatorActions'
 import { SimulatorTouchActions } from './SimulatorTouchActions'
 import { sampleTerrainHeight } from '../lib/voxelTerrain'
+import { useScenePreparation } from '../stores/useScenePreparation'
 import './simulator.css'
 import './panels.css'
 
@@ -123,7 +124,7 @@ export function FlightInterface() {
           {STATIONS.map((site) => <button type="button" key={site.id} className="map-site" style={{ left: `${mapPosition(site.pos[0])}%`, top: `${mapPosition(site.pos[2])}%` }} onClick={() => travel(site.id)} aria-label={`Travel to ${site.name}`}>{site.index}</button>)}
         </div>
         <div className="destination-rows">{STATIONS.map((site) => <div key={site.id} className="destination-row"><span className="eyebrow">{site.index}</span><div><strong>{site.name}</strong><small>{distance(site.id)} M · {MODEL_CONFIG[site.id].assetPath ? 'Asset configured' : 'Awaiting 3D model'}</small></div><button type="button" onClick={() => travel(site.id)} aria-label={`Fly to ${site.name}`}>Fly here</button><button type="button" onClick={() => inspect(site.id)} aria-label={`Read ${site.name}`}>Read</button></div>)}</div>
-        <div className="quality-control"><Settings2 size={16} /><span>QUALITY</span>{(['low', 'medium', 'high'] as QualityLevel[]).map((quality) => <button key={quality} type="button" className={settings.quality === quality ? 'active' : ''} onClick={() => updateSettings({ quality })} aria-pressed={settings.quality === quality}>{quality}</button>)}</div>
+        <div className="quality-control"><Settings2 size={16} /><span>QUALITY</span>{(['low', 'medium', 'high'] as QualityLevel[]).map((quality) => <button key={quality} type="button" className={settings.quality === quality ? 'active' : ''} onClick={() => { useScenePreparation.getState().begin(quality); updateSettings({ quality }) }} aria-pressed={settings.quality === quality}>{quality}</button>)}</div>
         <label className="motion-setting"><input type="checkbox" checked={settings.reducedMotion} onChange={(event) => updateSettings({ reducedMotion: event.target.checked })} />Reduced motion</label>
       </Modal>}
       {controlsOpen && <Modal title="FLIGHT CONTROLS" onClose={closeControls}><div className="info-card"><p><kbd>W</kbd> / <kbd>↑</kbd> Accelerate · <kbd>S</kbd> / <kbd>↓</kbd> Brake</p><p><kbd>A</kbd> / <kbd>←</kbd> Left · <kbd>D</kbd> / <kbd>→</kbd> Right</p><p><kbd>Q</kbd> Descend · <kbd>E</kbd> Ascend</p><p><kbd>Space</kbd> Flight/hover · <kbd>R</kbd> Reset when FX is OFF</p><p><kbd>F</kbd> Nearby information when FX is OFF · <kbd>X</kbd> Toggle fictional FX</p><p>FX ON: <kbd>F</kbd>/left mouse fire · <kbd>R</kbd> Reload · right-drag camera</p><p><kbd>Shift</kbd> Boost · <kbd>Home</kbd> Always reset · <kbd>Esc</kbd> Navigation/back</p><button className="btn-mil" type="button" onClick={() => { resetAircraft(); closeControls() }}>Reset aircraft</button><button className="btn-mil" type="button" onClick={toggleMode}>Toggle flight/hover</button></div></Modal>}

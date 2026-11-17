@@ -1,0 +1,13 @@
+/* The renderer stays mounted and warms under a single opaque loading surface. */
+.world-preparing .flight-canvas { opacity: 0; pointer-events: none; }
+.world-ready .flight-canvas { opacity: 1; transition: opacity 420ms ease; }
+.world-preparing .persistent-interface { visibility: hidden; }
+.world-ready .persistent-interface { visibility: visible; }
+.loading-screen { z-index: 90; }
+.fallback-shell { z-index: 100; }
+.loading-details { color: #9bb0bf !important; font-size: 11px !important; letter-spacing: .1em !important; margin-top: 14px !important; }
+.loading-failure { margin-top: 22px; color: #efadb4; font-size: 13px; letter-spacing: normal; line-height: 1.6; }
+.loading-failure button { margin: 8px 8px 0 0; }
+.screen-effect { opacity: .025; }
+.vignette.screen-effect { opacity: .15; }
+@media (prefers-reduced-motion: reduce) { .world-ready .flight-canvas { transition: none; } }
